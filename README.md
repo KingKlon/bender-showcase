@@ -55,7 +55,7 @@ flowchart TD
         API --- DB
     end
 
-    AWS -->|señal| REP["Replicant — copy trading multibroker (IBKR + MT5)"]
+    AWS -->|señal| REP["Replicant — copy trading; al iniciar se elige mercado y bróker (IBKR + MT5)"]
     REP --> TG["Dashboard Telegram · informe PDF diario"]
     REP --> BRK[("Bróker del usuario")]
     AWS -.->|solo verificación de licencia| GAP["Bot Gap EUR/USD (independiente)"]
@@ -96,9 +96,9 @@ Complementado con análisis de **sentimiento de mercado**, **calendario económi
 - **Bot Gap EUR/USD:** producto **independiente** especializado en la estrategia de *gap* del par EUR/USD. No recibe señales del sistema: opera por sí mismo y el servidor central solo verifica su licencia (*fingerprint* + pago de licencia anual). Incluye **auto-actualización** con verificación de integridad (SHA256).
 - **Dashboard en tiempo real por Telegram:** consulta de P&L, posiciones y balance, notificaciones de cada operación e informes PDF diarios.
 - **API REST:** acceso programático a las señales con autenticación HMAC-SHA256, *rate limiting* y webhooks push, en tres niveles de servicio:
-  - **Basic**  1 conexión simultánea · 8 req/min · histórico de 7 días.
-  - **Pro**  3 conexiones simultáneas · 25 req/min · histórico de 30 días · 1 webhook.
-  - **Enterprise**  6 conexiones simultáneas · 50 req/min · histórico ilimitado · 3 webhooks.
+  - **Basic** — 1 conexión simultánea · 8 req/min · histórico de 7 días.
+  - **Pro** — 3 conexiones simultáneas · 25 req/min · histórico de 30 días · 1 webhook.
+  - **Enterprise** — 6 conexiones simultáneas · 50 req/min · histórico ilimitado · 3 webhooks.
 
 ---
 
@@ -139,5 +139,6 @@ El sistema está pensado para crecer **sin rediseño estructural**:
 📧 alvaro.n.puerta@gmail.com · linkedin.com/in/NunezPuertaAlvaro
 
 *Disponible para enseñar el sistema en detalle (código, diagramas y demo) en conversación privada.*
+
 
 
