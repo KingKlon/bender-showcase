@@ -28,6 +28,46 @@ Es un proyecto técnico completo: motor de inteligencia, infraestructura cloud, 
 
 Arquitectura distribuida y modular de **tres capas independientes** que se comunican por HTTP/REST seguro.
 
+```mermaid
+flowchart TD
+    subgraph MASTER["Bot Master — PENTASIGNAL"]
+        F1["ML · RF · XGBoost · DNN/LSTM · Optuna"]
+        F2["Level 2"]
+        F3["Momentum"]
+        F4["Volumen"]
+        F5["Análisis técnico"]
+        SCORE["Score ponderado de 5 factores + gestión de riesgo en cascada"]
+        F1 --> SCORE
+        F2 --> SCORE
+        F3 --> SCORE
+        F4 --> SCORE
+        F5 --> SCORE
+    end
+
+    SCORE -->|señal| AWS
+
+    subgraph AWS["Servidor Central — AWS EC2"]
+        APP["Gestión de clientes · billing · Telegram"]
+        API["API REST · HMAC-SHA256 · webhooks"]
+        DB[("Base de datos · 23 tablas")]
+        STRIPE["Pagos Stripe"]
+        APP --- DB
+        API --- DB
+    end
+
+    AWS -->|señal| REP["Replicant — copy trading multibroker (IBKR + MT5)"]
+    REP --> TG["Dashboard Telegram · informe PDF diario"]
+    REP --> BRK[("Bróker del usuario")]
+    AWS -.->|solo verificación de licencia| GAP["Bot Gap EUR/USD (independiente)"]
+
+    AWS -->|señal| APICLI
+    subgraph APICLI["Clientes API REST"]
+        API_B["Basic · 1 conexión · 8 req/min · histórico 7 días"]
+        API_P["Pro · 3 conexiones · 25 req/min · 30 días · 1 webhook"]
+        API_E["Enterprise · 6 conexiones · 50 req/min · ilimitado · 3 webhooks"]
+    end
+```
+
 ### 1. Bot Master — Motor de inteligencia ("PENTASIGNAL")
 
 Genera la señal mediante un **score ponderado de 5 factores** con pesos dinámicos (de ahí el nombre, *PENTASIGNAL*):
@@ -53,9 +93,12 @@ Complementado con análisis de **sentimiento de mercado**, **calendario económi
 ### 3. Productos cliente (misma señal, varios mercados)
 
 - **Replicant:** bot de *copy trading* con arquitectura de adaptadores ("máscaras") que permite **modo multibroker simultáneo (Interactive Brokers + MetaTrader 5)** y ampliarse a nuevos brokers y mercados sin reescribir el núcleo. Incluye **auto-actualización** con verificación de integridad (SHA256).
-- **Bot Gap EUR/USD:** producto independiente especializado en la estrategia de *gap* del par EUR/USD, con su propio sistema de **auto-actualización** y verificación de integridad (SHA256).
+- **Bot Gap EUR/USD:** producto **independiente** especializado en la estrategia de *gap* del par EUR/USD. No recibe señales del sistema: opera por sí mismo y el servidor central solo verifica su licencia (*fingerprint* + pago de licencia anual). Incluye **auto-actualización** con verificación de integridad (SHA256).
 - **Dashboard en tiempo real por Telegram:** consulta de P&L, posiciones y balance, notificaciones de cada operación e informes PDF diarios.
-- **API REST:** acceso programático a las señales, con autenticación, *rate limiting* y webhooks push.
+- **API REST:** acceso programático a las señales con autenticación HMAC-SHA256, *rate limiting* y webhooks push, en tres niveles de servicio:
+  - **Basic**  1 conexión simultánea · 8 req/min · histórico de 7 días.
+  - **Pro**  3 conexiones simultáneas · 25 req/min · histórico de 30 días · 1 webhook.
+  - **Enterprise**  6 conexiones simultáneas · 50 req/min · histórico ilimitado · 3 webhooks.
 
 ---
 
@@ -96,4 +139,5 @@ El sistema está pensado para crecer **sin rediseño estructural**:
 📧 alvaro.n.puerta@gmail.com · linkedin.com/in/NunezPuertaAlvaro
 
 *Disponible para enseñar el sistema en detalle (código, diagramas y demo) en conversación privada.*
+
 
