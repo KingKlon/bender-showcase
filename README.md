@@ -3,7 +3,7 @@
 > **Banca Especializada en Negociación, Decisión y Ejecución de Resultados**
 > Plataforma de trading cuantitativo de extremo a extremo: del modelo de IA a la ejecución en el bróker.
 
-**Estado:** técnicamente funcional y desplegado en producción, operando con capital propio en fase de validación.
+**Estado:** Funcional y desplegado en producción, operando con capital propio en fase de validación.
 **Autor:** Álvaro Núñez de la Puerta — diseño, desarrollo y arquitectura en solitario.
 
 ---
@@ -18,7 +18,7 @@ Este repositorio es un **escaparate de arquitectura**. El código fuente de B.E.
 
 B.E.N.D.E.R. es un sistema de trading algorítmico cuantitativo de extremo a extremo. Su **Bot Master** genera señales combinando cinco factores de análisis con pesos dinámicos; un servidor central las distribuye y los productos cliente las **ejecutan automáticamente en el bróker del usuario**, gestionando el riesgo en tiempo real.
 
-Es un proyecto técnico completo: motor de inteligencia, infraestructura cloud, API REST, base de datos, integración de pagos y bots de ejecución, desarrollado íntegramente en solitario (166.000 líneas de Python distribuidos en 78 módulos, además de web y API).
+Es un proyecto técnico completo: motor de inteligencia, infraestructura cloud, API REST, base de datos, integración de pagos y bots de ejecución, desarrollado íntegramente en solitario ( distribuidos en 79 módulos, además de web y API).
 
 **Nasdaq es solo el punto de partida.** La arquitectura está diseñada desde el origen para crecer en dos ejes sin rediseñar el núcleo: **multi-mercado** (cada mercado se opera con una instancia del Bot Master adaptada por configuración) y **multi-broker** (cada bróker es un adaptador que implementa la interfaz de ejecución). El bot cliente (Replicant) ya está preparado para esa expansión.
 
