@@ -4,6 +4,7 @@
 > Plataforma de trading cuantitativo de extremo a extremo: del modelo de IA a la ejecución en el bróker.
 
 **Estado:** Funcional y desplegado en producción, operando con capital propio en fase de validación.
+
 **Autor:** Álvaro Núñez de la Puerta — diseño, desarrollo y arquitectura en solitario.
 
 **Url:** www.benderbot.es
