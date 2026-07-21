@@ -6,6 +6,8 @@
 **Estado:** Funcional y desplegado en producción, operando con capital propio en fase de validación.
 **Autor:** Álvaro Núñez de la Puerta — diseño, desarrollo y arquitectura en solitario.
 
+**Url** www.benderbot.es
+
 ---
 
 ## 🔒 Nota sobre el código
