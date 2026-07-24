@@ -3,11 +3,11 @@
 > **Banca Especializada en Negociación, Decisión y Ejecución de Resultados**
 > Plataforma de trading cuantitativo de extremo a extremo: del modelo de IA a la ejecución en el bróker.
 
-**Estado:** Funcional y desplegado en producción, operando con capital propio en fase de validación.
+**Estado:** técnicamente funcional y desplegado en producción, operando con capital propio en fase de validación.
 
 **Autor:** Álvaro Núñez de la Puerta — diseño, desarrollo y arquitectura en solitario.
 
-**Url:** www.benderbot.es
+**Url:** https://www.benderbot.es
 
 ---
 
@@ -21,7 +21,7 @@ Este repositorio es un **escaparate de arquitectura**. El código fuente de B.E.
 
 B.E.N.D.E.R. es un sistema de trading algorítmico cuantitativo de extremo a extremo. Su **Bot Master** genera señales combinando cinco factores de análisis con pesos dinámicos; un servidor central las distribuye y los productos cliente las **ejecutan automáticamente en el bróker del usuario**, gestionando el riesgo en tiempo real.
 
-Es un proyecto técnico completo: motor de inteligencia, infraestructura cloud, API REST, base de datos, integración de pagos y bots de ejecución, desarrollado íntegramente en solitario ( distribuidos en 79 módulos, además de web y API).
+Es un proyecto técnico completo: motor de inteligencia, infraestructura cloud, API REST, base de datos, integración de pagos y bots de ejecución, desarrollado íntegramente en solitario (distribuido en 109 módulos de Python, más una capa web de frontend).
 
 **Nasdaq es solo el punto de partida.** La arquitectura está diseñada desde el origen para crecer en dos ejes sin rediseñar el núcleo: **multi-mercado** (cada mercado se opera con una instancia del Bot Master adaptada por configuración) y **multi-broker** (cada bróker es un adaptador que implementa la interfaz de ejecución). El bot cliente (Replicant) ya está preparado para esa expansión.
 
@@ -34,7 +34,7 @@ Arquitectura distribuida y modular de **tres capas independientes** que se comun
 ```mermaid
 flowchart TD
     subgraph MASTER["Bot Master — PENTASIGNAL"]
-        F1["ML · RF · XGBoost · DNN/LSTM · Optuna"]
+        F1["ML · RF · XGBoost · LightGBM · DNN/LSTM · Optuna"]
         F2["Level 2"]
         F3["Momentum"]
         F4["Volumen"]
@@ -52,7 +52,7 @@ flowchart TD
     subgraph AWS["Servidor Central — AWS EC2"]
         APP["Gestión de clientes · billing · Telegram"]
         API["API REST · HMAC-SHA256 · webhooks"]
-        DB[("Base de datos · 23 tablas")]
+        DB[("Base de datos · 22 tablas")]
         STRIPE["Pagos Stripe"]
         APP --- DB
         API --- DB
@@ -75,7 +75,7 @@ flowchart TD
 
 Genera la señal mediante un **score ponderado de 5 factores** con pesos dinámicos (de ahí el nombre, *PENTASIGNAL*):
 
-- **Machine Learning** — ensemble de RandomForest, XGBoost y redes neuronales profundas (DNN/LSTM, TensorFlow/Keras), con hiperparámetros optimizados mediante **Optuna**.
+- **Machine Learning** — ensemble de RandomForest, XGBoost, LightGBM y redes neuronales profundas (DNN/LSTM, TensorFlow/Keras), con hiperparámetros optimizados mediante **Optuna**.
 - **Datos de Level 2** del mercado (profundidad de libro) en tiempo real.
 - **Momentum** de mercado.
 - **Análisis de volumen.**
@@ -90,7 +90,7 @@ Complementado con análisis de **sentimiento de mercado**, **calendario económi
 - Desplegado en **AWS EC2** con **Nginx (SSL/TLS)**, **Gunicorn** y CDN.
 - Dos servicios independientes: gestión de clientes, notificaciones y *risk logging* por un lado; y **distribución de señales** por API por otro.
 - **API REST** con autenticación **HMAC-SHA256**, **webhooks firmados** y *rate limiting* por plan.
-- **Base de datos relacional** (SQLite, 23 tablas; migración a PostgreSQL planificada) compartida por servidor y API: clientes, API keys, sesiones, operaciones, señales, webhooks y controles antifraude.
+- **Base de datos relacional** (SQLite, 22 tablas; migración a PostgreSQL planificada) compartida por servidor y API: clientes, API keys, sesiones, operaciones, señales, webhooks y controles antifraude.
 - **Integración de pagos con Stripe** (modo LIVE).
 
 ### 3. Productos cliente (misma señal, varios mercados)
@@ -126,10 +126,10 @@ El sistema está pensado para crecer **sin rediseño estructural**:
 
 | Área | Tecnologías |
 |------|-------------|
-| Lenguaje | Python 3.11 |
-| Machine Learning | RandomForest · XGBoost · TensorFlow/Keras (DNN/LSTM) · scikit-learn · Optuna |
+| Lenguaje | Python 3.9 |
+| Machine Learning | RandomForest · XGBoost · LightGBM · TensorFlow/Keras (DNN/LSTM) · scikit-learn · Optuna |
 | Backend / API | Flask · Gunicorn · API REST · HMAC-SHA256 · webhooks |
-| Datos | Base de datos relacional (SQLite → PostgreSQL) · multi-tenant · migraciones |
+| Datos | Base de datos relacional (SQLite → PostgreSQL) · multi-tenant |
 | Cloud / DevOps | AWS EC2 · Nginx · CDN · Git |
 | Integraciones | Interactive Brokers (TWS API) · MetaTrader 5 · Telegram Bot API · Stripe · Level 2 |
 | Desarrollo | Vibe coding (desarrollo asistido por IA) · prompt engineering · orquestación de modelos |
@@ -142,6 +142,5 @@ El sistema está pensado para crecer **sin rediseño estructural**:
 📧 alvaro.n.puerta@gmail.com · linkedin.com/in/NunezPuertaAlvaro
 
 *Disponible para enseñar el sistema en detalle (código, diagramas y demo) en conversación privada.*
-
 
 
